@@ -1,46 +1,38 @@
 namespace _5.Hubs;
 
-public class HandleHub : HubBase
+public class HandleHub
 {
-    public HandleHub(int number, Dictionary<int, int> handleTime, Dictionary<int, int> costs, double aggregation) 
-        : base(number, handleTime, costs)
+    public HandleHub(int number, Dictionary<int, double> handleTime, Dictionary<int, int> costs, double aggregation,
+        CollectHub hub1, CollectHub hub2)
     {
+        Number = number;
+        HandleTime = handleTime;
+        Costs = costs;
         Aggregation = aggregation;
+        double cef = 2 * (1 - hub1.Intensity * HandleTime[hub1.Number] / Aggregation +
+                           hub2.Intensity * HandleTime[hub2.Number] / Aggregation);
+        HandleTimeRes = hub1.Intensity * Math.Pow(HandleTime[hub1.Number], 2) / cef + Number +
+                        hub2.Intensity * Math.Pow(HandleTime[hub2.Number], 2) / cef;
+        CostsRes = hub1.Intensity * Costs[hub1.Number] / Aggregation +
+                   hub2.Intensity * Costs[hub2.Number] / Aggregation;
     }
 
-    public void AddNewProblem(int number, int timeLeft, int port)
-    {
-        bool alreadyAdded = false;
-        switch (port)
-        {
-            case 1:
-            {
-                if (OnProcessing2)
-                {
-                    
-                }
-                if (OnProcessing1)
-                {
-                    Time1 += 10;
-                   
-                }
-                break;
-            }
-                
-            case 2:
-            {
-                break;
-            }
-        }
-    }
+    public double HandleTimeRes { get; set; }
 
+    public double CostsRes { get; set; }
+    
     public double Aggregation { get; set; }
+    
+    public int Number { get; set; }
+    
+    public Dictionary<int, double> HandleTime { get; set; }
+    
+    public Dictionary<int, int> Costs { get; set; }
 
-    public int Time1 { get; set; }
-    
-    public int Time2 { get; set; }
-    
-    private bool OnProcessing1 => Time1 < 0;
-    
-    private bool OnProcessing2 => Time2 < 0;
+    public void AverageHandleTimeAndCosts()
+    {
+        Console.WriteLine(
+            $"Average handle time for hub {Number} -> {Math.Round(HandleTimeRes, 2)}\n" +
+            $"Average costs for hub {Number} -> {Math.Round(CostsRes, 2)}\n");
+    }
 }
