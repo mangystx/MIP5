@@ -21,7 +21,7 @@ public class CollectHub
     public void AverageHandleTimeAndCosts()
     {
         Console.WriteLine(
-            $"Average handle time for hub {Number} -> {Math.Round(Intensity * HandleTime / (1.0 / (HandleTime - Intensity)), 2)}\n" +
+            $"Average handle time for hub {Number} -> {Math.Round(Intensity * HandleTime / (1.0 / HandleTime - Intensity), 2)}\n" +
             $"Average costs for hub {Number} -> {Intensity * Costs}\n");
     }
 }
